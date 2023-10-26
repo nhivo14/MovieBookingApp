@@ -8,15 +8,16 @@
 import Foundation
 import Alamofire
 
-class NetworService {
+class NetworkService {
+    static let shared = NetworkService()
+    
     // Base URL for your API
-    let baseURL: String
+    let baseURL: String = "aaaaa"
     
     // Shared Alamofire session manager for making requests
     let sessionManager: Session
     
-    init(baseURL: String) {
-        self.baseURL = baseURL
+    private init() {
         
         // Initialize Alamofire session manager with custom configuration
         let configuration = URLSessionConfiguration.default
@@ -24,12 +25,16 @@ class NetworService {
         self.sessionManager = Session(configuration: configuration)
     }
     
+}
+
+extension NetworkService {
+    
     // Perform a GET request
-    func get(
+    func get<T: Decodable>(
         endpoint: String,
         parameters: [String: Any]? = nil,
         headers: HTTPHeaders? = nil,
-        completion: @escaping (Result<Data, Error>) -> Void
+        completion: @escaping (Swift.Result<T, Error>) -> Void
     ) {
         let fullURL = baseURL + endpoint
         
@@ -38,7 +43,7 @@ class NetworService {
             .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    completion(.success(data))
+                    completion(.success(data as! T))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -46,11 +51,11 @@ class NetworService {
     }
     
     // Perform a POST request
-    func post(
+    func post<T: Decodable>(
         endpoint: String,
         parameters: [String: Any]? = nil,
         headers: HTTPHeaders? = nil,
-        completion: @escaping (Result<Data, Error>) -> Void
+        completion: @escaping (Swift.Result<T, Error>) -> Void
     ) {
         let fullURL = baseURL + endpoint
         
@@ -59,7 +64,7 @@ class NetworService {
             .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    completion(.success(data))
+                    completion(.success(data as! T))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -67,11 +72,11 @@ class NetworService {
     }
     
     // Perform a PUT request
-    func put(
+    func put<T: Decodable>(
         endpoint: String,
         parameters: [String: Any]? = nil,
         headers: HTTPHeaders? = nil,
-        completion: @escaping (Result<Data, Error>) -> Void
+        completion: @escaping (Swift.Result<T, Error>) -> Void
     ) {
         let fullURL = baseURL + endpoint
         
@@ -80,7 +85,7 @@ class NetworService {
             .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    completion(.success(data))
+                    completion(.success(data as! T))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -88,11 +93,11 @@ class NetworService {
     }
     
     // Perform a DELETE request
-    func delete(
+    func delete<T: Decodable>(
         endpoint: String,
         parameters: [String: Any]? = nil,
         headers: HTTPHeaders? = nil,
-        completion: @escaping (Result<Data, Error>) -> Void
+        completion: @escaping (Swift.Result<T, Error>) -> Void
     ) {
         let fullURL = baseURL + endpoint
         
@@ -101,7 +106,7 @@ class NetworService {
             .responseData { response in
                 switch response.result {
                 case .success(let data):
-                    completion(.success(data))
+                    completion(.success(data as! T))
                 case .failure(let error):
                     completion(.failure(error))
                 }
@@ -109,4 +114,3 @@ class NetworService {
     }
     
 }
-
